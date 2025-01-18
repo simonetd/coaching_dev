@@ -21,12 +21,12 @@ class FiboMatrix:
         
         for i in range(n_rows):
             for j in range(n_cols):
-                result_matrix[i][j] = self.calculate_fibo(self.matrix[i][j])
+                result_matrix[i][j] = self.__calculate_fibo(self.matrix[i][j])
 
         return result_matrix
 
     
-    def calculate_fibo(self, number):
+    def __calculate_fibo(self, number):
         """
         Calcule la valeur de Fibonacci pour un entier donné avec mémorisation.
         """
@@ -39,7 +39,7 @@ class FiboMatrix:
             self.memo[number] = 1
             return 1
         else:
-            self.memo[number] = self.calculate_fibo(number - 1) + self.calculate_fibo(number - 2)
+            self.memo[number] = self.__calculate_fibo(number - 1) + self.__calculate_fibo(number - 2)
             return self.memo[number]
 
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     matrix = [
         [1, 4, 6],
         [8, 12, 22],
-        [33, 43, 50]
+        [33, 46, 53]
     ]
     
     fibo_matrix = FiboMatrix(matrix)
