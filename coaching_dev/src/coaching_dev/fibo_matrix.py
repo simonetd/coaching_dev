@@ -3,25 +3,24 @@ import numpy as np
 class FiboMatrix:
 
     def __init__(self, matrix):
-        self.matrix = np.array(matrix, dtype=int)  # Utilisation de numpy pour une gestion optimisée des matrices
-        self.memo = {}  # Mémoire pour optimiser les calculs de Fibonacci
+        self.matrix = np.array(matrix, dtype=int)
+        self.memo = {}  # Mémoire pour optimisation
     
     def solve_matrix(self):
         """
         Calcule la matrice avec les éléments remplacés par leurs équivalents de Fibonacci.
         """
 
-        if self.matrix.size == 0:  # Cas spécial pour les matrices vides
+        if self.matrix.size == 0:  # Matrices vides
             return self.matrix
 
-        # Récupérer la taille de la matrice
+        # Taille de la matrice
         n_rows, n_cols = self.matrix.shape
         
-        # Matrice triangulaire pour éviter des calculs redondants
         result_matrix = np.zeros_like(self.matrix, dtype=int)
         
-        for i in range(n_rows):  # Parcourir les lignes
-            for j in range(n_cols):  # Parcourir les colonnes
+        for i in range(n_rows):
+            for j in range(n_cols):
                 result_matrix[i][j] = self.calculate_fibo(self.matrix[i][j])
 
         return result_matrix
@@ -46,7 +45,6 @@ class FiboMatrix:
 
 
 if __name__ == "__main__":
-    # Exemple de matrice
     matrix = [
         [1, 4, 6],
         [8, 12, 22],

@@ -28,7 +28,7 @@ def test_fibo_matrix_empty():
 
 def test_fibo_matrix_single_element():
     matrix = [[5]]
-    expected = [[5]]  # Fibonacci(5) = 5
+    expected = [[5]]
     fibo_matrix = FiboMatrix(matrix)
     result = fibo_matrix.solve_matrix()
     assert np.array_equal(result, np.array(expected))
@@ -36,8 +36,8 @@ def test_fibo_matrix_single_element():
 def test_fibo_matrix_large_numbers():
     matrix = [[10, 15], [20, 25]]
     expected = [
-        [55, 610],  # Fibonacci(10) = 55, Fibonacci(15) = 610
-        [6765, 75025],  # Fibonacci(20) = 6765, Fibonacci(25) = 75025
+        [55, 610],
+        [6765, 75025],
     ]
     fibo_matrix = FiboMatrix(matrix)
     result = fibo_matrix.solve_matrix()
@@ -45,7 +45,7 @@ def test_fibo_matrix_large_numbers():
 
 def test_fibo_matrix_negative_and_zero():
     matrix = [[-1, 0], [1, 2]]
-    expected = [[0, 0], [1, 1]]  # Fibonacci(-1) = 0, Fibonacci(0) = 0
+    expected = [[0, 0], [1, 1]]
     fibo_matrix = FiboMatrix(matrix)
     result = fibo_matrix.solve_matrix()
     assert np.array_equal(result, np.array(expected))
