@@ -5,6 +5,10 @@ description = "Margo dev coaching package"
 authors = ["DS"]
 license = "MIT"
 readme = "README.md"
+packages = [
+    { include = "coaching_dev", from = "src" }
+]
+include = ["tests/*", "CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
