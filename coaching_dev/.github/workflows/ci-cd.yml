@@ -1,41 +1,61 @@
-name: ci-cd
+name: CI/CD Pipeline
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   ci:
-    # Set up operating system
+    # Continuous Integration: Run tests, collect coverage, and build documentation
     runs-on: ubuntu-latest
   
-    # Define job steps
     steps:
+      # Step 1: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
+      # Step 2: Check-out repository
       - name: Check-out repository
         uses: actions/checkout@v3
 
-      - name: Install poetry
+      # Step 3: Install Poetry
+      - name: Install Poetry
         uses: snok/install-poetry@v1
 
-      - name: Install package
+      # Step 4: Debug working directory
+      - name: Debug working directory
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents:"
+          ls -la
+
+      # Step 5: Install dependencies
+      - name: Install dependencies
         run: poetry install
 
+      # Step 6: Run tests with pytest
       - name: Test with pytest
         run: poetry run pytest tests/ --cov=coaching_dev --cov-report=xml
 
+      # Step 7: Use Codecov to track coverage
       - name: Use Codecov to track coverage
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml   # coverage report
 
+      # Step 8: Build documentation
       - name: Build documentation
         run: poetry run make html --directory docs/
 
   cd:
+    # Continuous Deployment: Publish package and release
     permissions:
       id-token: write
       contents: write
@@ -49,24 +69,38 @@ jobs:
     # Set up operating system
     runs-on: ubuntu-latest
 
-    # Define job steps
     steps:
+      # Step 1: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
+      # Step 2: Check-out repository
       - name: Check-out repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      # Step 3: Install Poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      # Step 4: Debug working directory
+      - name: Debug working directory
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents:"
+          ls -la
+
+      # Step 5: Use Python Semantic Release to prepare release
       - name: Use Python Semantic Release to prepare release
         id: release
         uses: python-semantic-release/python-semantic-release@v8.3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Step 6: Publish to TestPyPI
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
@@ -74,6 +108,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
 
+      # Step 7: Test install from TestPyPI
       - name: Test install from TestPyPI
         if: steps.release.outputs.released == 'true'
         run: |
@@ -82,12 +117,14 @@ jobs:
             --extra-index-url https://pypi.org/simple \
             coaching_dev
 
+      # Step 8: Publish to PyPI
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
+      # Step 9: Publish package distributions to GitHub Releases
       - name: Publish package distributions to GitHub Releases
         uses: python-semantic-release/upload-to-gh-release@main
         if: steps.release.outputs.released == 'true'
