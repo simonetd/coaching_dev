@@ -23,24 +23,22 @@ jobs:
       with:
         python-version: 3.12  # Replace with your desired Python version
 
-    # Step 3: Install dependencies
-    - name: Install dependencies
+    # Step 3: Install Poetry
+    - name: Install Poetry
       run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        curl -sSL https://install.python-poetry.org | python3 -
+        export PATH="$HOME/.local/bin:$PATH"
 
-    # Step 4: Build the package
+    # Step 4: Install dependencies
+    - name: Install dependencies
+      run: poetry install
+
+    # Step 5: Build the package
     - name: Build the Python package
-      run: python setup.py sdist bdist_wheel
+      run: poetry build
 
-    # Step 5: Publish to PyPI or Test PyPI
+    # Step 6: Publish to PyPI
     - name: Publish to PyPI
       env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
-    
-    - name: Run tests
-      run: |
-        pip install pytest
-        pytest
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+      run: poetry publish --username __token__ --password $POETRY_PYPI_TOKEN_PYPI
