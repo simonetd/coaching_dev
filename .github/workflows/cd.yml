@@ -1,12 +1,12 @@
-name: CD Pipeline
+name: CD Pipeline for Poetry
 
 on:
   push:
     branches:
-      - main  # Run the CD pipeline on every push to the main branch
+      - main  # Run on pushes to the main branch
   pull_request:
     branches:
-      - main  # Optionally, run on pull requests to the main branch
+      - main  # Optionally run on pull requests
 
 jobs:
   deploy:
@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.12  # Replace with your desired Python version
+        python-version: 3.12
 
     # Step 3: Install Poetry
     - name: Install Poetry
@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: poetry install
 
-    # Step 5: Build the package
+    # Step 5: Build the Python package
     - name: Build the Python package
       run: poetry build
 
